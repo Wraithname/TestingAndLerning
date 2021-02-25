@@ -11,6 +11,7 @@ namespace TestingAndLerning
     {
         double[,] class1, class2;
         List<double[]> learn1, learn2, test1, test2;
+        Random rnd = new Random(DateTime.Now.Millisecond);
         public void GetAllClassesValues(string path)
         {
             class1 = new double[7, 2520];
@@ -48,18 +49,46 @@ namespace TestingAndLerning
             }
             learn1 = new List<double[]>();
             learn2 = new List<double[]>();
+            for(int f=0;f< (class1.Length / (class1.GetUpperBound(0) + 1));f++)
+            {
+                double[] vec1 = new double[7];
+                for (int y = 0; y < 7; y++)
+                    vec1[y] = class1[y, f];
+                learn1.Add(vec1);
+            }
+            for (int f = 0; f < (class2.Length / (class2.GetUpperBound(0) + 1)); f++)
+            {
+                double[] vec2 = new double[7];
+                for (int y = 0; y < 7; y++)
+                    vec2[y] = class2[y, f];
+                learn2.Add(vec2);
+            }
             test1 = new List<double[]>();
             test2 = new List<double[]>();
-            int testing = 5040 * (test / 100);
+            double testingd = 2520.0 * ((test / 100.0));
+            int testing = Convert.ToInt32(testingd);
             int testingqvt = testing % 2;
-            int learning = 5040 - testing+testingqvt;
-            int testingclass = testing / 2;
-            int k = 0;
+            int k = 0,h=2519;
             while(k<= testing)
             {
-
+                int cl1 = rnd.Next(0, h);
+                h--;
+                double[] vec1 = new double[7];
+                for(int y=0;y<7;y++)
+                vec1[y] = class1[y, cl1];
+                test1.Add(vec1);
+                double[] vec2 = new double[7];
+                for (int y = 0; y < 7; y++)
+                    vec2[y] = class2[y, cl1];
+                test2.Add(vec2);
+                learn1.RemoveAt(cl1);
+                learn2.RemoveAt(cl1);
                 k++;
             }
+            WriteToFile(learn1, "TeachingTop");
+            WriteToFile(learn2, "TeachingBottom");
+            WriteToFile(test1, "TestingUp");
+            WriteToFile(test2, "TestingBottom");
         }
         void ReadCsvFiles(string path)
         {

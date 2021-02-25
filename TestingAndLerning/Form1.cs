@@ -34,7 +34,7 @@ namespace TestingAndLerning
         {
             if(numericUpDown1.Value!=0&& numericUpDown2.Value != 0)
             {
-                distr.RunDistripution((int)numericUpDown1.Value);
+                distr.RunDistripution((int)numericUpDown2.Value);
             }
             else
             {
