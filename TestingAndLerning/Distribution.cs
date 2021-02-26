@@ -85,10 +85,46 @@ namespace TestingAndLerning
                 learn2.RemoveAt(cl1);
                 k++;
             }
+            Normilise(class1list, "Class1");
+            Normilise(class2list, "Class2");
+            Normilise(learn1, "TeachingTop");
+            Normilise(learn2, "TeachingBottom");
+            Normilise(test1, "TestingUp");
+            Normilise(test2, "TestingBottom");
+            WriteToFile(class1list, "Class1");
+            WriteToFile(class2list, "Class2");
             WriteToFile(learn1, "TeachingTop");
             WriteToFile(learn2, "TeachingBottom");
             WriteToFile(test1, "TestingUp");
             WriteToFile(test2, "TestingBottom");
+        }
+        void Normilise(List<double[]> mass,string name)
+        {
+            double[] min =new double[7];
+            double[] max = new double[7];
+            for(int i=0;i<7;i++)
+            {
+                min[i] = Int32.MaxValue;
+                max[i] = Int32.MinValue;
+            }
+            foreach (double[] tx in mass)
+            {
+                 for(int i=0;i<7;i++)
+                {
+                    if (min[i] > tx[i])
+                        min[i] = tx[i];
+                    if (max[i] < tx[i])
+                        max[i] = tx[i];
+                }
+            }
+            foreach (double[] tx in mass)
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    tx[i] = (tx[i] - min[i]) / (max[i] - min[i]);
+                }
+            }
+            WriteToFile(mass, "Normilize "+name);
         }
         void ReadCsvFiles(string path)
         {
