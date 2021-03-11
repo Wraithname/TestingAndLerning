@@ -12,6 +12,10 @@ namespace TestingAndLerning
         double[,] class1, class2;
         List<double[]> learn1, learn2, test1, test2;
         Random rnd = new Random(DateTime.Now.Millisecond);
+        /// <summary>
+        /// Получение значений классов
+        /// </summary>
+        /// <param name="path">Путь</param>
         public void GetAllClassesValues(string path)
         {
             class1 = new double[7, 2520];
@@ -19,14 +23,38 @@ namespace TestingAndLerning
             ReadCsvFiles(path);
 
         }
+        /// <summary>
+        /// Создание массива псевдослучайных чисел без повтора
+        /// </summary>
+        /// <param name="length">Размер тестового набора</param>
+        /// <returns></returns>
+        private int[] RandOnly(int length)
+        {
+            int[] numbrnd = new int[length];
+            int i = 0;
+            while (i < length)
+            {
+                int num = rnd.Next(0, (numbrnd.Length - 1) - i);
+                if (!numbrnd.Contains(num))
+                {
+                    numbrnd[i] = num;
+                    i++;
+                }
+            }
+            return numbrnd;
+        }
+        /// <summary>
+        /// Метод распределения выборок
+        /// </summary>
+        /// <param name="test">Процент тестовой выборки</param>
         public void RunDistripution(int test)
         {
             List<double[]> class1list = new List<double[]>();
             List<double[]> class2list = new List<double[]>();
             for (int i = 0; i < (class1.Length / (class1.GetUpperBound(0) + 1)); i++)
             {
-                    double[] vect = new double[7];
-                vect[0]=class1[0, i];
+                double[] vect = new double[7];
+                vect[0] = class1[0, i];
                 vect[1] = class1[1, i];
                 vect[2] = class1[2, i];
                 vect[3] = class1[3, i];
@@ -49,7 +77,7 @@ namespace TestingAndLerning
             }
             learn1 = new List<double[]>();
             learn2 = new List<double[]>();
-            for(int f=0;f< (class1.Length / (class1.GetUpperBound(0) + 1));f++)
+            for (int f = 0; f < (class1.Length / (class1.GetUpperBound(0) + 1)); f++)
             {
                 double[] vec1 = new double[7];
                 for (int y = 0; y < 7; y++)
@@ -68,21 +96,22 @@ namespace TestingAndLerning
             double testingd = 2520.0 * ((test / 100.0));
             int testing = Convert.ToInt32(testingd);
             int testingqvt = testing % 2;
-            int k = 0,h=2519;
-            while(k<= testing)
+            int k = 0;
+            int[] rndarrayclass1 = RandOnly(testing);
+            int[] rndarrayclass2 = RandOnly(testing);
+            while (k <= testing)
             {
-                int cl1 = rnd.Next(0, h);
-                h--;
+                
                 double[] vec1 = new double[7];
-                for(int y=0;y<7;y++)
-                vec1[y] = class1[y, cl1];
+                for (int y = 0; y < 7; y++)
+                    vec1[y] = class1[y, rndarrayclass1[k]];
                 test1.Add(vec1);
                 double[] vec2 = new double[7];
                 for (int y = 0; y < 7; y++)
-                    vec2[y] = class2[y, cl1];
+                    vec2[y] = class2[y, rndarrayclass2[k]];
                 test2.Add(vec2);
-                learn1.RemoveAt(cl1);
-                learn2.RemoveAt(cl1);
+                learn1.RemoveAt(rndarrayclass1[k]);
+                learn2.RemoveAt(rndarrayclass2[k]);
                 k++;
             }
             Normilise(class1list, "Class1");
@@ -98,18 +127,23 @@ namespace TestingAndLerning
             WriteToFile(test1, "TestingUp");
             WriteToFile(test2, "TestingBottom");
         }
-        void Normilise(List<double[]> mass,string name)
+        /// <summary>
+        /// Нормализация
+        /// </summary>
+        /// <param name="mass">Лист векторов</param>
+        /// <param name="name">Имя выборки</param>
+        void Normilise(List<double[]> mass, string name)
         {
-            double[] min =new double[7];
+            double[] min = new double[7];
             double[] max = new double[7];
-            for(int i=0;i<7;i++)
+            for (int i = 0; i < 7; i++)
             {
                 min[i] = Int32.MaxValue;
                 max[i] = Int32.MinValue;
             }
             foreach (double[] tx in mass)
             {
-                 for(int i=0;i<7;i++)
+                for (int i = 0; i < 7; i++)
                 {
                     if (min[i] > tx[i])
                         min[i] = tx[i];
@@ -124,8 +158,12 @@ namespace TestingAndLerning
                     tx[i] = (tx[i] - min[i]) / (max[i] - min[i]);
                 }
             }
-            WriteToFile(mass, "Normilize "+name);
+            WriteToFile(mass, "Normilize " + name);
         }
+        /// <summary>
+        /// Чтение CSV файла
+        /// </summary>
+        /// <param name="path">Путь</param>
         void ReadCsvFiles(string path)
         {
             string folderPath = path + @"\1";
@@ -211,10 +249,15 @@ namespace TestingAndLerning
                 }
             }
         }
+        /// <summary>
+        /// Запись в CSV файл
+        /// </summary>
+        /// <param name="result">Данные для записи</param>
+        /// <param name="name">Имя файла</param>
         void WriteToFile(List<double[]> result, string name)
         {
             string workpath = Directory.GetCurrentDirectory();
-            if (!Directory.Exists(workpath+@"\result"))
+            if (!Directory.Exists(workpath + @"\result"))
                 Directory.CreateDirectory(workpath + @"\result");
 
             string pathCsvFile = workpath + @"\result\" + name + ".csv";
