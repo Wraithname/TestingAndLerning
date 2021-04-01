@@ -11,15 +11,15 @@ namespace TestingAndLerning
     {
         double[,] class1, class2;
         List<double[]> learn1, learn2, test1, test2;
-        Random rnd = new Random(DateTime.Now.Millisecond);
+        Random rnd = new Random();
         /// <summary>
         /// Получение значений классов
         /// </summary>
         /// <param name="path">Путь</param>
         public void GetAllClassesValues(string path)
         {
-            class1 = new double[7, 2520];
-            class2 = new double[7, 2520];
+            class1 = new double[11, 2527];
+            class2 = new double[11, 2527];
             ReadCsvFiles(path);
 
         }
@@ -34,7 +34,7 @@ namespace TestingAndLerning
             int i = 0;
             while (i < length)
             {
-                int num = rnd.Next(0, (numbrnd.Length - 1) - i);
+                int num = rnd.Next(0, 2527 - i);
                 if (!numbrnd.Contains(num))
                 {
                     numbrnd[i] = num;
@@ -53,7 +53,7 @@ namespace TestingAndLerning
             List<double[]> class2list = new List<double[]>();
             for (int i = 0; i < (class1.Length / (class1.GetUpperBound(0) + 1)); i++)
             {
-                double[] vect = new double[7];
+                double[] vect = new double[11];
                 vect[0] = class1[0, i];
                 vect[1] = class1[1, i];
                 vect[2] = class1[2, i];
@@ -61,11 +61,15 @@ namespace TestingAndLerning
                 vect[4] = class1[4, i];
                 vect[5] = class1[5, i];
                 vect[6] = class1[6, i];
+                vect[7] = class1[7, i];
+                vect[8] = class1[8, i];
+                vect[9] = class1[9, i];
+                vect[10] = class1[10, i];
                 class1list.Add(vect);
             }
             for (int i = 0; i < (class2.Length / (class2.GetUpperBound(0) + 1)); i++)
             {
-                double[] vect = new double[7];
+                double[] vect = new double[11];
                 vect[0] = class2[0, i];
                 vect[1] = class2[1, i];
                 vect[2] = class2[2, i];
@@ -73,41 +77,46 @@ namespace TestingAndLerning
                 vect[4] = class2[4, i];
                 vect[5] = class2[5, i];
                 vect[6] = class2[6, i];
+                vect[7] = class2[7, i];
+                vect[8] = class2[8, i];
+                vect[9] = class2[9, i];
+                vect[10] = class2[10, i];
                 class2list.Add(vect);
             }
             learn1 = new List<double[]>();
             learn2 = new List<double[]>();
             for (int f = 0; f < (class1.Length / (class1.GetUpperBound(0) + 1)); f++)
             {
-                double[] vec1 = new double[7];
-                for (int y = 0; y < 7; y++)
+                double[] vec1 = new double[11];
+                for (int y = 0; y < 11; y++)
                     vec1[y] = class1[y, f];
                 learn1.Add(vec1);
             }
             for (int f = 0; f < (class2.Length / (class2.GetUpperBound(0) + 1)); f++)
             {
-                double[] vec2 = new double[7];
-                for (int y = 0; y < 7; y++)
+                double[] vec2 = new double[11];
+                for (int y = 0; y < 11; y++)
                     vec2[y] = class2[y, f];
                 learn2.Add(vec2);
             }
             test1 = new List<double[]>();
             test2 = new List<double[]>();
-            double testingd = 2520.0 * ((test / 100.0));
+            double testingd = 2527.0 * ((test / 100.0));
             int testing = Convert.ToInt32(testingd);
             int testingqvt = testing % 2;
+            testing += testingqvt;
             int k = 0;
             int[] rndarrayclass1 = RandOnly(testing);
             int[] rndarrayclass2 = RandOnly(testing);
-            while (k <= testing)
+            while (k < testing)
             {
-                
-                double[] vec1 = new double[7];
-                for (int y = 0; y < 7; y++)
+
+                double[] vec1 = new double[11];
+                for (int y = 0; y < 11; y++)
                     vec1[y] = class1[y, rndarrayclass1[k]];
                 test1.Add(vec1);
-                double[] vec2 = new double[7];
-                for (int y = 0; y < 7; y++)
+                double[] vec2 = new double[11];
+                for (int y = 0; y < 11; y++)
                     vec2[y] = class2[y, rndarrayclass2[k]];
                 test2.Add(vec2);
                 learn1.RemoveAt(rndarrayclass1[k]);
@@ -134,16 +143,16 @@ namespace TestingAndLerning
         /// <param name="name">Имя выборки</param>
         void Normilise(List<double[]> mass, string name)
         {
-            double[] min = new double[7];
-            double[] max = new double[7];
-            for (int i = 0; i < 7; i++)
+            double[] min = new double[11];
+            double[] max = new double[11];
+            for (int i = 0; i < 11; i++)
             {
                 min[i] = Int32.MaxValue;
                 max[i] = Int32.MinValue;
             }
             foreach (double[] tx in mass)
             {
-                for (int i = 0; i < 7; i++)
+                for (int i = 0; i < 11; i++)
                 {
                     if (min[i] > tx[i])
                         min[i] = tx[i];
@@ -153,7 +162,7 @@ namespace TestingAndLerning
             }
             foreach (double[] tx in mass)
             {
-                for (int i = 0; i < 7; i++)
+                for (int i = 0; i < 11; i++)
                 {
                     tx[i] = (tx[i] - min[i]) / (max[i] - min[i]);
                 }
@@ -166,25 +175,12 @@ namespace TestingAndLerning
         /// <param name="path">Путь</param>
         void ReadCsvFiles(string path)
         {
-            string folderPath = path + @"\1";
             int k = 0;
-            double[] numbers = new double[7];
-            if (Directory.Exists(folderPath))
-            {
-                string[] allfiles = Directory.GetFiles(folderPath);
-
-                for (int j = 0; j < allfiles.Length; j++)
+                if (Directory.Exists(path))
                 {
-                    string file = allfiles[j].Split('\\').Last();
-                    file = file.Remove(0, 7);
-                    file = file.Remove(file.Length - 4);
-                    numbers[j] = Convert.ToDouble(file);
-                }
-                Array.Sort(numbers);
-                char[] parm = new char[2] { '\r', '\n' };
-                foreach (double num in numbers)
-                {
-                    string readText = File.ReadAllText(folderPath + @"\Britnes" + num + ".csv");
+                    string[] allfiles = Directory.GetFiles(path);
+                    char[] parm = new char[2] { '\r', '\n' };
+                    string readText = File.ReadAllText(allfiles[0]);
                     string[] str = readText.Split(parm);
                     List<string> krp = new List<string>();
                     for (int i = 0; i < str.Length; i++)
@@ -202,32 +198,16 @@ namespace TestingAndLerning
                         class1[4, k] = Convert.ToDouble(con[4]);
                         class1[5, k] = Convert.ToDouble(con[5]);
                         class1[6, k] = Convert.ToDouble(con[6]);
+                        class1[7, k] = Convert.ToDouble(con[7]);
+                        class1[8, k] = Convert.ToDouble(con[8]);
+                        class1[9, k] = Convert.ToDouble(con[9]);
+                        class1[10, k] = Convert.ToDouble(con[10]);
                         k++;
                     }
-
-                }
-            }
-            folderPath = path + @"\2";
-            k = 0;
-            numbers = new double[7];
-            if (Directory.Exists(folderPath))
-            {
-                string[] allfiles = Directory.GetFiles(folderPath);
-
-                for (int j = 0; j < allfiles.Length; j++)
-                {
-                    string file = allfiles[j].Split('\\').Last();
-                    file = file.Remove(0, 7);
-                    file = file.Remove(file.Length - 4);
-                    numbers[j] = Convert.ToDouble(file);
-                }
-                Array.Sort(numbers);
-                char[] parm = new char[2] { '\r', '\n' };
-                foreach (double num in numbers)
-                {
-                    string readText = File.ReadAllText(folderPath + @"\Britnes" + num + ".csv");
-                    string[] str = readText.Split(parm);
-                    List<string> krp = new List<string>();
+                    k = 0;
+                    readText = File.ReadAllText(allfiles[1]);
+                    str = readText.Split(parm);
+                    krp = new List<string>();
                     for (int i = 0; i < str.Length; i++)
                     {
                         if (str[i].Length != 0)
@@ -243,11 +223,13 @@ namespace TestingAndLerning
                         class2[4, k] = Convert.ToDouble(con[4]);
                         class2[5, k] = Convert.ToDouble(con[5]);
                         class2[6, k] = Convert.ToDouble(con[6]);
+                        class2[7, k] = Convert.ToDouble(con[7]);
+                        class2[8, k] = Convert.ToDouble(con[8]);
+                        class2[9, k] = Convert.ToDouble(con[9]);
+                        class2[10, k] = Convert.ToDouble(con[10]);
                         k++;
                     }
-
                 }
-            }
         }
         /// <summary>
         /// Запись в CSV файл
