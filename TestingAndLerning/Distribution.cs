@@ -123,18 +123,18 @@ namespace TestingAndLerning
                 learn2.RemoveAt(rndarrayclass2[k]);
                 k++;
             }
-            Normilise(class1list, "Class1");
-            Normilise(class2list, "Class2");
-            Normilise(learn1, "TeachingTop");
-            Normilise(learn2, "TeachingBottom");
-            Normilise(test1, "TestingUp");
-            Normilise(test2, "TestingBottom");
             WriteToFile(class1list, "Class1");
             WriteToFile(class2list, "Class2");
             WriteToFile(learn1, "TeachingTop");
             WriteToFile(learn2, "TeachingBottom");
             WriteToFile(test1, "TestingUp");
             WriteToFile(test2, "TestingBottom");
+            Normilise(class1list, "Class1");
+            Normilise(class2list, "Class2");
+            Normilise(learn1, "TeachingTop");
+            Normilise(learn2, "TeachingBottom");
+            Normilise(test1, "TestingUp");
+            Normilise(test2, "TestingBottom");
         }
         /// <summary>
         /// Нормализация
